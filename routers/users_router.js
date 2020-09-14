@@ -4,6 +4,8 @@ const config = require("config");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 
+const fetch = require("node-fetch");
+
 const { OAuth2Client } = require("google-auth-library");
 
 var rug = require("random-username-generator");
@@ -271,11 +273,43 @@ Router.post("/me/login/google", (req, res) => {
 });
 Router.post("/me/login/facebook", (req, res) => {
   const body = req.body;
+  const pavKey = config.get("jwt");
 
-  fetch(`https://graph.facebook.com/me?fields=email&access_token=${body.token}`)
+  fetch("https://graph.facebook.com/me?fields=email&access_token=" + body.token)
     .then((response) => response.json())
     .then((data) => {
-      console.log(data);
+      if (data.email.length != 0) {
+        // get email
+        const email = data.email;
+        // check for email
+        user_model
+          .find({ email: email })
+          .then((data) => {
+            if (data.length != 0) {
+              Data = data[0];
+
+              const id = Data._id;
+              const token = jwt.sign({ id: id }, pavKey);
+              res
+                .header("x-auth-token", token)
+                .status(200)
+                .send({ log_in: true });
+            } else {
+              res.status(422).send({
+                error_type: "mongoose",
+                error: "email or password not correct",
+              });
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(422).send({ error_type: "mongoose", err });
+          });
+      } else {
+        res
+          .status(422)
+          .send({ error_type: "facebook", err: "no email connected" });
+      }
     })
     .catch((err) => console.error(err));
 });

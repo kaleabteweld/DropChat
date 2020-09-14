@@ -63,7 +63,7 @@ function SignIn() {
       email: $(input_ele["email"].current).val(),
       pass: $(input_ele["pass"].current).val(),
     };
-    console.log(data);
+    // console.log(data);
 
     axios
       .post("http://localhost:4000/api/users/me/signin", data)
@@ -113,7 +113,7 @@ function SignIn() {
                 .siblings(".invalid-feedback")
                 .text(err.message);
             });
-          } else if (error.response.data.error_type == "mongooes") {
+          } else if (error.response.data.error_type == "mongoose") {
             Object.keys(error.response.data.error.keyPattern).map((da) => {
               $(input_ele[da].current).addClass("is-invalid");
               $(input_ele[da].current)

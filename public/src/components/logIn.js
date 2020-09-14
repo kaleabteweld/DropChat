@@ -10,10 +10,14 @@ import $ from "jquery";
 import FacebookLogin from "react-facebook-login";
 import GoogleLogin from "react-google-login";
 
+import log_in_ac from "../redux/action/log_in";
+
 import "./css/logIn.css";
 
 function LogIn() {
   const auth_state = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
   const [auth_state_st, setauth_state_st] = useState(auth_state.log_in);
 
   const [email, setemail] = useState("");
@@ -36,15 +40,60 @@ function LogIn() {
 
   let Submit = (event) => {
     event.preventDefault();
+    let data = {
+      email: $(input_ele["email"].current).val(),
+      pass: $(input_ele["pass"].current).val(),
+    };
 
-    // let email = $("#form #email");
-    // let password = $("#form #pass");
+    axios
+      .post("http://localhost:4000/api/users/me/login", data)
+      .then(function (response) {
+        // handle success
+        $(".main .form_sig .form-group input.is-invalid").removeClass(
+          "is-invalid"
+        );
+        $(".main .form_sig .form-group input.is-invalid").addClass("is-valid");
+        console.log("success", response.data);
+        localStorage.setItem("auth-token", response.headers["x-auth-token"]);
 
-    // var email_error = email.siblings("#error_email");
-    // var password_error = password.siblings("#error_pass");
+        // get user data
+        axios
+          .get("http://localhost:4000/api/users/me", {
+            headers: { "x-auth-token": response.headers["x-auth-token"] },
+          })
+          .then(function (response) {
+            dispatch(
+              log_in_ac({
+                data: response.data,
+                token: localStorage.getItem("auth-token"),
+              })
+            );
+          });
 
-    // let email_ = email.val();
-    // let password_ = password.val();
+        setauth_state_st(true);
+      })
+      .catch((error) => {
+        console.log(error.response);
+        $(".main .form_sig .form-group input.is-invalid").removeClass(
+          "is-invalid"
+        );
+        if (error.response != undefined) {
+          if (error.response.data.error_type == "joi") {
+            console.log(input_ele[error.response.data.error]);
+            error.response.data.error.map((err) => {
+              console.log(err.context.key);
+              $(input_ele[err.context.key].current).addClass("is-invalid");
+              $(input_ele[err.path].current)
+                .siblings(".invalid-feedback")
+                .text(err.message);
+            });
+          }
+          if (error.response.data.error_type == "mongoose") {
+            alert(error.response.data.error);
+            $(".main .form_sig .form-group input").val("");
+          }
+        }
+      });
   };
 
   var googleRespones = (res) => {
@@ -56,8 +105,22 @@ function LogIn() {
           token: res.tokenId,
         })
         .then(function (response) {
-          console.log(response);
-          console.log("all good login");
+          // console.log(response);
+          localStorage.setItem("auth-token", response.headers["x-auth-token"]);
+
+          // get user data
+          axios
+            .get("http://localhost:4000/api/users/me", {
+              headers: { "x-auth-token": localStorage.getItem("auth-token") },
+            })
+            .then(function (response) {
+              dispatch(
+                log_in_ac({
+                  data: response.data,
+                  token: localStorage.getItem("auth-token"),
+                })
+              );
+            });
           setauth_state_st(true);
         })
         .catch((err) => {
@@ -68,7 +131,7 @@ function LogIn() {
   };
 
   var facebookRespones = (res) => {
-    if (res.profileObj == null || res.profileObj == undefined) {
+    if (res.name == null || res.name == undefined) {
     } else {
       console.log(res);
       axios
@@ -76,8 +139,23 @@ function LogIn() {
           token: res.accessToken,
         })
         .then(function (response) {
-          console.log(response);
-          console.log("all good login");
+          // console.log(response);
+          localStorage.setItem("auth-token", response.headers["x-auth-token"]);
+
+          // get user data
+          axios
+            .get("http://localhost:4000/api/users/me", {
+              headers: { "x-auth-token": localStorage.getItem("auth-token") },
+            })
+            .then(function (response) {
+              dispatch(
+                log_in_ac({
+                  data: response.data,
+                  token: localStorage.getItem("auth-token"),
+                })
+              );
+            });
+
           setauth_state_st(true);
         })
         .catch((err) => {
