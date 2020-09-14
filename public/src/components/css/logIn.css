@@ -29,33 +29,38 @@ body {
   .main {
     width: 100% !important;
   }
+  .main .form_sig .other * {
+    width: 100%;
+    margin-left: 0 !important ;
+    margin-right: 0 !important;
+  }
 }
 
 /* form */
-.main #form {
+.main .form_sig {
   display: flex;
   flex-direction: column;
 }
-.main #form .form-group {
+.main .form_sig .form-group {
   display: flex;
   flex-direction: column;
 }
-.main #form .form-group label {
+.main .form_sig .form-group label {
   align-self: center;
   font-weight: bolder;
   color: skyblue;
 }
-.main #form .form-group input {
+.main .form_sig .form-group input {
   border-radius: 11rem;
   background-color: #1e1e1e !important;
   color: #2e8fa2 !important;
 }
 
-.main #form button {
+.main .form_sig button {
   border-radius: 11rem;
   margin: 10px;
 }
-.main #form a {
+.main .form_sig a {
   border-radius: 11rem;
   margin: 10px;
 }
@@ -67,11 +72,22 @@ body {
 
 /* other */
 
-.main #form > .form-group .invalid-feedback > p {
+.main .form_sig > .form-group .invalid-feedback > p {
   margin: 0px;
   font-weight: bolder;
 }
-.main #form .T > .form-group .invalid-feedback > p {
+.main .form_sig .T > .form-group .invalid-feedback > p {
   margin: 0px;
   font-weight: bolder;
+}
+
+.main .form_sig .other {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 14px;
+}
+.main .form_sig .other > * {
+  border-radius: 0px !important;
 }

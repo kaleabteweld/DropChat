@@ -69,44 +69,65 @@ function SignIn() {
       .post("http://localhost:4000/api/users/me/signin", data)
       .then(function (response) {
         // handle success
-        $("input").removeClass("invalid-feedback");
+        $(".main .form_sig .form-group input.is-invalid").removeClass(
+          "is-invalid"
+        );
+        $(".main .form_sig .form-group input.is-invalid").addClass("is-valid");
         console.log("success", response.data);
         localStorage.setItem("auth-token", response.headers["x-auth-token"]);
-        dispatch(log_in_ac());
+
+        // get user data
+        axios
+          .get("http://localhost:4000/api/users/me", {
+            headers: { "x-auth-token": response.headers["x-auth-token"] },
+          })
+          .then(function (response) {
+            dispatch(
+              log_in_ac({
+                data: response.data,
+                token: localStorage.getItem("auth-token"),
+              })
+            );
+          });
+
         setauth_state_st(true);
       })
       .catch(function (error) {
         // handle error
-        $("input[class=invalid-feedbac]").removeClass("invalid-feedback");
+        $(".main #form_sig .form-group input.is-invalid").removeClass(
+          "is-invalid"
+        );
         console.log(error.response);
-        if (error.response.data.error_type == "nexmo") {
-          $(input_ele["phone"].current).addClass("is-invalid");
-          $(input_ele["phone"].current)
-            .siblings(".invalid-feedback")
-            .text(error.response.data.error);
-        } else if (error.response.data.error_type == "joi") {
-          console.log(input_ele[error.response.data.error]);
-          error.response.data.error.map((err) => {
-            console.log(err.context.key);
-            $(input_ele[err.context.key].current).addClass("is-invalid");
-            $(input_ele[err.path].current)
+        if (error.response != undefined) {
+          if (error.response.data.error_type == "nexmo") {
+            $(input_ele["phone"].current).addClass("is-invalid");
+            $(input_ele["phone"].current)
               .siblings(".invalid-feedback")
-              .text(err.message);
-          });
-        } else if (error.response.data.error_type == "mongooes") {
-          Object.keys(error.response.data.error.keyPattern).map((da) => {
-            $(input_ele[da].current).addClass("is-invalid");
-            $(input_ele[da].current)
-              .siblings(".invalid-feedback")
-              .text(`${da} taken`);
-          });
+              .text(error.response.data.error);
+          } else if (error.response.data.error_type == "joi") {
+            console.log(input_ele[error.response.data.error]);
+            error.response.data.error.map((err) => {
+              console.log(err.context.key);
+              $(input_ele[err.context.key].current).addClass("is-invalid");
+              $(input_ele[err.path].current)
+                .siblings(".invalid-feedback")
+                .text(err.message);
+            });
+          } else if (error.response.data.error_type == "mongooes") {
+            Object.keys(error.response.data.error.keyPattern).map((da) => {
+              $(input_ele[da].current).addClass("is-invalid");
+              $(input_ele[da].current)
+                .siblings(".invalid-feedback")
+                .text(`${da} taken`);
+            });
+          }
         }
-        // setauth_state_st(false);
       });
   };
 
   var googleRespones = (res) => {
     console.log(res);
+    var google_res = res;
     if (res.profileObj == null || res.profileObj == undefined) {
     } else {
       axios
@@ -114,6 +135,8 @@ function SignIn() {
           img: res.profileObj.imageUrl,
           email: res.profileObj.email,
           name: res.profileObj.name,
+          ac_type: "google",
+          ac_typ_token: google_res.accessToken,
         })
         .then(function (response) {
           // handle success
@@ -130,6 +153,7 @@ function SignIn() {
     }
   };
   var facebookRespones = (res) => {
+    var facebook_res = res;
     console.log(res);
     if (res.name == null || res.name == undefined) {
     } else {
@@ -138,6 +162,8 @@ function SignIn() {
           img: res.picture.data.url,
           email: res.email,
           name: res.name,
+          ac_type: "facebook",
+          ac_typ_token: facebook_res.accessToken,
         })
         .then(function (response) {
           // handle success
@@ -156,11 +182,11 @@ function SignIn() {
 
   console.log(auth_state_st);
   if (auth_state_st) {
-    return <Redirect to="/home" />;
+    return <Redirect to="/login" />;
   } else {
     return (
       <div className="main">
-        <form id="form_sig" onSubmit={Submit}>
+        <form className="form_sig" onSubmit={Submit}>
           <div className="T">
             <div className="form-group">
               <label for="name">your full Name</label>
@@ -272,7 +298,7 @@ function SignIn() {
             />
             <FacebookLogin
               appId="799827897429258"
-              autoLoad={true}
+              autoLoad={false}
               fields="name,email,picture"
               onClick={facebookRespones}
               callback={facebookRespones}

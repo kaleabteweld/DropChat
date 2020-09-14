@@ -4,6 +4,8 @@ const config = require("config");
 const bcrypt = require("bcrypt");
 const _ = require("lodash");
 
+const { OAuth2Client } = require("google-auth-library");
+
 var rug = require("random-username-generator");
 
 const user_model = require("../models/user_model");
@@ -220,6 +222,64 @@ Router.post("/me/login", (req, res) => {
       res.status(422).send({ error_type: "mongoose", err });
     });
 });
+Router.post("/me/login/google", (req, res) => {
+  const body = req.body;
+
+  const pavKey = config.get("jwt");
+  // get google token data
+  const client = new OAuth2Client(
+    "95718633232-7f5pfdr34jt1g0gccuoek0kmmpga56t5.apps.googleusercontent.com"
+  );
+  client
+    .verifyIdToken({
+      idToken: body.token,
+      audience:
+        "95718633232-7f5pfdr34jt1g0gccuoek0kmmpga56t5.apps.googleusercontent.com",
+    })
+    .then((data) => {
+      // get email
+      const email = data.payload.email;
+      // check for email
+      user_model
+        .find({ email: email })
+        .then((data) => {
+          if (data.length != 0) {
+            Data = data[0];
+
+            const id = Data._id;
+            const token = jwt.sign({ id: id }, pavKey);
+            res
+              .header("x-auth-token", token)
+              .status(200)
+              .send({ log_in: true });
+          } else {
+            res.status(422).send({
+              error_type: "mongoose",
+              error: "email or password not correct",
+            });
+          }
+        })
+
+        .catch((err) => {
+          console.log(err);
+          res.status(422).send({ error_type: "mongoose", err });
+        });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
+Router.post("/me/login/facebook", (req, res) => {
+  const body = req.body;
+
+  fetch(`https://graph.facebook.com/me?fields=email&access_token=${body.token}`)
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+    })
+    .catch((err) => console.error(err));
+});
+
 // updata user
 Router.put("/me", auth, (req, res) => {
   const body = req.body;
