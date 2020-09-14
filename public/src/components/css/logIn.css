@@ -1,0 +1,77 @@
+body {
+  height: 100vh;
+  margin: 0;
+
+  display: flex;
+  justify-content: center;
+}
+
+.main {
+  margin-top: auto;
+  margin-bottom: auto;
+
+  /* background: aqua; */
+  height: 46vh;
+  width: 46vw;
+  overflow-y: scroll;
+
+  border-radius: 11px;
+
+  padding: 10px;
+
+  box-shadow: 10px 5px 5px 10px rgba(0, 0, 0, 0.5),
+    -10px -5px 5px 10px rgba(0, 0, 0, 0.5);
+}
+@media all and (max-width: 500px) {
+  body {
+    background-size: 200% 100%;
+  }
+  .main {
+    width: 100% !important;
+  }
+}
+
+/* form */
+.main #form {
+  display: flex;
+  flex-direction: column;
+}
+.main #form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+.main #form .form-group label {
+  align-self: center;
+  font-weight: bolder;
+  color: skyblue;
+}
+.main #form .form-group input {
+  border-radius: 11rem;
+  background-color: #1e1e1e !important;
+  color: #2e8fa2 !important;
+}
+
+.main #form button {
+  border-radius: 11rem;
+  margin: 10px;
+}
+.main #form a {
+  border-radius: 11rem;
+  margin: 10px;
+}
+
+.main #other {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+/* other */
+
+.main #form > .form-group .invalid-feedback > p {
+  margin: 0px;
+  font-weight: bolder;
+}
+.main #form .T > .form-group .invalid-feedback > p {
+  margin: 0px;
+  font-weight: bolder;
+}

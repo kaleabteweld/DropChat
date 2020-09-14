@@ -1,0 +1,41 @@
+#nav {
+  width: 100%;
+
+  padding: 10px;
+
+  display: flex;
+
+  background-color: #343a40;
+
+  /* margin-top: 10px; */
+
+  /* border-radius: 30px; */
+}
+#nav a {
+  margin-right: auto;
+  margin-left: 10px;
+  color: whitesmoke;
+  font-size: 20px;
+  font-weight: bolder;
+}
+#nav #navbarResponsive a {
+  color: whitesmoke;
+  font-size: small;
+  font-weight: normal;
+
+  cursor: pointer;
+}
+#nav #navbarResponsive a:hover {
+  /* border-bottom: 2px skyblue solid !important; */
+  font-weight: bolder;
+  color: skyblue;
+}
+.active {
+  border-bottom: 2px skyblue solid !important;
+}
+.ac {
+  border-bottom: 2px skyblue solid !important;
+}
+.no_ac {
+  border-bottom: transparent !important;
+}

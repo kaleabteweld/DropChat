@@ -1,0 +1,7 @@
+{
+  "port": 4000,
+  "MongoDB_url": "mongodb+srv://pain:pain@cluster0.v7jsd.gcp.mongodb.net/DropChat?retryWrites=true&w=majority",
+  "jwt": "pain",
+  "nexmo_api_key": "c789c5f5",
+  "nexmo_apiSecret": "Lob8CScWvQ38HNfN"
+}

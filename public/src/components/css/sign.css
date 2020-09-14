@@ -1,0 +1,127 @@
+@media all and (max-width: 500px) {
+  body {
+    background-size: 200% 100%;
+  }
+  .main {
+    width: 100% !important;
+  }
+  .main #form_sig .T {
+    display: flex;
+    flex-direction: column;
+  }
+  .main #form_sig .T > .form-group {
+    margin-left: 0px !important;
+
+    flex: 1;
+  }
+  .main #form_sig .form-group label {
+    align-self: center;
+    font-weight: bolder;
+    color: #eb6d00 !important;
+  }
+  .main #form_sig .form-group input {
+    border-radius: 11rem;
+    background-color: #191919 !important;
+    color: #eb6d00 !important;
+  }
+}
+@media all and (max-height: 600px) {
+  .main #form_sig {
+    height: 70vh !important;
+    overflow-y: scroll !important;
+  }
+}
+
+.main {
+  margin-top: auto;
+  margin-bottom: auto;
+
+  /* background: aqua; */
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-image: url("../../img/black-and-white-photography-of-sand-2387819.jpg");
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+/* form */
+.main #form_sig {
+  margin: auto;
+
+  max-height: 80vh;
+  width: 90vw;
+
+  overflow-y: scroll;
+
+  border-radius: 11px;
+
+  padding: 10px;
+
+  box-shadow: 10px 5px 5px 10px rgba(0, 0, 0, 0.5),
+    -10px -5px 5px 10px rgba(0, 0, 0, 0.5);
+
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  align-items: center;
+}
+
+/* .T */
+.main #form_sig .T {
+  width: 100%;
+  display: flex;
+}
+.main #form_sig .T > .form-group {
+  margin-left: 20px;
+  width: 100%;
+}
+
+.main #form_sig .form-group {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.main #form_sig .form-group label {
+  align-self: center;
+  font-weight: bolder;
+  color: skyblue;
+}
+.main #form_sig .form-group input {
+  border-radius: 11rem;
+  background-color: #1e1e1e !important;
+  color: #2271b2 !important;
+}
+
+/* button */
+.main #form_sig #post {
+  background-color: #191919 !important;
+  color: #eb6d00 !important;
+  font-weight: bolder;
+  border: 0;
+}
+
+.main #form_sig > .form-group .invalid-feedback > p {
+  margin: 0px;
+  font-weight: bolder;
+}
+.main #form_sig .T > .form-group .invalid-feedback > p {
+  margin: 0px;
+  font-weight: bolder;
+}
+.main #form_sig .other {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  margin-top: 14px;
+}
+
+.main #form_sig .other span .g_but {
+}
+.main #form_sig .other span .fb_but {
+}

@@ -1,0 +1,77 @@
+#about {
+  margin-top: 30px;
+
+  height: auto;
+  width: 100%;
+
+  background-color: rgb(61, 68, 74);
+}
+#about #text {
+  width: 50%;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  color: crimson;
+
+  margin-bottom: 30px;
+
+  font-size: x-large;
+  font-weight: bolder;
+
+  text-align: center;
+
+  border-bottom: solid;
+
+  padding: 10px;
+}
+#about .container-fluid .row .col-sm-12 .card {
+  /* background: transparent; */
+  position: relative;
+  border-radius: 10px;
+
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+#about .container-fluid .row .col-sm-12:last-child {
+  margin-bottom: 30px;
+}
+#about .container-fluid .row .col-sm-12 .card > img {
+  width: 100%;
+  height: 225px;
+}
+#about .container-fluid .row .col-sm-12 .card #work {
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  /* border: 1px solid skyblue; */
+  /* background-color: skyblue; */
+
+  display: border-box;
+  position: absolute;
+
+  left: calc((100%) - (60px));
+  /* left: 76%; */
+
+  top: calc((225px) - (50px) / 2);
+  /* top: 200px;     */
+}
+#about .container-fluid .row .col-sm-12 .card .card-title {
+  text-align: center;
+  color: tomato;
+}
+#about .container-fluid .row .col-sm-12 .card .card-text {
+  text-align: center;
+  color: darkgrey;
+}
+#about .container-fluid .row .col-sm-12 .card .card-footer {
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: space-around;
+}
+#about .container-fluid .row .col-sm-12 .card .card-footer > img {
+  width: 20px;
+  max-height: 20px;
+  margin: auto;
+}
