@@ -7,6 +7,7 @@ const user_Validation_Schema = joi.object({
   email: joi.string().email().min(4).max(100).required(),
   phone: joi.string().min(4).max(100).required(),
   pass: joi.string().min(4).max(1024).required(),
+  img: joi.string().min(4).max(2000),
 });
 
 function user_Validation(data) {

@@ -22,8 +22,9 @@ const user_Schema = mongoose.Schema({
   },
   phone: {
     type: String,
-    required: false,
     unique: true,
+    sparse: true,
+    default: " ",
   },
   region: {
     type: Object,
@@ -43,6 +44,11 @@ const user_Schema = mongoose.Schema({
     type: [mongoose.Types.ObjectId],
   },
 });
+
+user_Schema.methods.addPhoneNull = function () {
+  this.phone.unique = false;
+  this.phone = " ";
+};
 
 const user_model = mongoose.model("user", user_Schema);
 

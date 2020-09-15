@@ -12,6 +12,7 @@ import GoogleLogin from "react-google-login";
 import "../components/css/sign.css";
 
 import log_in_ac from "../redux/action/log_in";
+import Sub_sigin from "../components/sub_sigin_pass";
 
 function SignIn() {
   const [inputname, setinputname] = useState("");
@@ -32,6 +33,8 @@ function SignIn() {
     email: useRef(),
     pass: useRef(),
   };
+
+  const [Res_st, Res_set_st] = useState({});
 
   var Input = (event) => {
     let target = $(event.target);
@@ -90,7 +93,7 @@ function SignIn() {
             );
           });
 
-        setauth_state_st(true);
+        setauth_state_st("log");
       })
       .catch(function (error) {
         // handle error
@@ -113,7 +116,7 @@ function SignIn() {
                 .siblings(".invalid-feedback")
                 .text(err.message);
             });
-          } else if (error.response.data.error_type == "mongoose") {
+          } else if (error.response.data.error_type == "mongooes") {
             Object.keys(error.response.data.error.keyPattern).map((da) => {
               $(input_ele[da].current).addClass("is-invalid");
               $(input_ele[da].current)
@@ -126,62 +129,58 @@ function SignIn() {
   };
 
   var googleRespones = (res) => {
-    console.log(res);
-    var google_res = res;
+    //console.log(res);
+    Res_set_st({ res, type: "google" });
     if (res.profileObj == null || res.profileObj == undefined) {
     } else {
+      const email = res.profileObj.email;
       axios
-        .post("http://localhost:4000/api/users/me/signin/google", {
-          img: res.profileObj.imageUrl,
-          email: res.profileObj.email,
-          name: res.profileObj.name,
-          ac_type: "google",
-          ac_typ_token: google_res.accessToken,
+        .post("http://localhost:4000/api/users/me/signin/other", {
+          check: "true",
+          email,
         })
-        .then(function (response) {
-          // handle success
-          console.log("success", response.data);
-          localStorage.setItem("auth-token", response.headers["x-auth-token"]);
-          // dispatch(log_in_ac());
-          setauth_state_st(true);
+        .then((data) => {
+          console.log(data);
+          setauth_state_st("log");
         })
-        .catch(function (error) {
-          // handle error
+        .catch((error) => {
           console.log(error.response);
-          setauth_state_st(false);
+          setauth_state_st("pass");
         });
     }
   };
   var facebookRespones = (res) => {
     var facebook_res = res;
     console.log(res);
+    Res_set_st({ res, type: "facebook" });
     if (res.name == null || res.name == undefined) {
     } else {
+      const email = res.email;
       axios
-        .post("http://localhost:4000/api/users/me/signin/facebook", {
-          img: res.picture.data.url,
-          email: res.email,
-          name: res.name,
-          ac_type: "facebook",
-          ac_typ_token: facebook_res.accessToken,
+        .post("http://localhost:4000/api/users/me/signin/other", {
+          check: "true",
+          email,
         })
-        .then(function (response) {
-          // handle success
-          console.log("success", response.data);
-          localStorage.setItem("auth-token", response.headers["x-auth-token"]);
-          // dispatch(log_in_ac());
-          setauth_state_st(true);
+        .then((data) => {
+          console.log(data);
+          setauth_state_st("log");
         })
-        .catch(function (error) {
-          // handle error
+        .catch((error) => {
           console.log(error.response);
-          setauth_state_st(false);
+          setauth_state_st("pass");
         });
     }
   };
 
+  // return
   console.log(auth_state_st);
-  if (auth_state_st) {
+  if (auth_state_st == "pass") {
+    return (
+      <React.Fragment>
+        <Sub_sigin Res={Res_st} />
+      </React.Fragment>
+    );
+  } else if (auth_state_st == "log") {
     return <Redirect to="/login" />;
   } else {
     return (
@@ -288,6 +287,7 @@ function SignIn() {
               {" "}
               sign In
             </button>
+
             <GoogleLogin
               clientId="95718633232-7f5pfdr34jt1g0gccuoek0kmmpga56t5.apps.googleusercontent.com"
               buttonText="Login"

@@ -7,7 +7,7 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import root_reducer from "./redux/reducer";
 
-import Root from "./components/root";
+import Home from "./components/home";
 import LogIn from "./components/logIn";
 import SignIn from "./components/signIn";
 import Into from "./components/into";
@@ -24,7 +24,7 @@ function App() {
         <Route exact path="/" component={Into} />
         <Route exact path="/logIn" component={LogIn} />
         <Route exact path="/signIn" component={SignIn} />
-        <Route exact path="/home" component={Root} />
+        <Route exact path="/home" component={Home} />
       </BrowserRouter>
     </Provider>
   );

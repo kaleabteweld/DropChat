@@ -37,13 +37,20 @@ Router.get("/me", auth, (req, res) => {
 Router.post("/me/signin", (req, res) => {
   const body = req.body;
 
-  let body_toSave = body;
+  var body_toSave = body;
+
+  // check if accout exist
+
+  if ((body_toSave.user_name = "null")) {
+    body_toSave.user_name = rug.generate();
+  }
 
   const pavKey = config.get("jwt");
 
   // validate for uew users
   const validate = user_Validation_new(body);
   if (Object.keys(validate).includes("error")) {
+    console.log(validate.error);
     res.status(422).send({ error_type: "joi", error: validate.error.details });
     return;
   }
@@ -54,68 +61,108 @@ Router.post("/me/signin", (req, res) => {
       body_toSave.pass = newPass;
 
       //spiting phone and region from phone
-      phone_number(body_toSave.phone)
-        .then((data) => {
-          // get all region data
-
-          if (data.status == 0) {
-            body_toSave.region = {
-              country_code: data.country_code,
-              country_code_iso3: data.country_code_iso3,
-              country_name: data.country_name,
-            };
-
-            // saveing to database
-            const new_user_model = new user_model(body_toSave);
-            new_user_model
-              .save()
-              .then((data) => {
-                const id = data._id;
-                const token = jwt.sign({ id: id }, pavKey);
-                res
-                  .header("x-auth-token", token)
-                  .status(200)
-                  .send({ log_in: true });
-              })
-              .catch((err) => {
-                res.status(422).send({ error_type: "mongooes", error: err });
-              });
-          } else {
+      if ((body_toSave.phone = "null")) {
+        // body_toSave.phone = undefined;
+        delete body_toSave["phone"];
+        // console.log(body_toSave);
+        // saveing to database
+        const new_user_model = new user_model(body_toSave);
+        new_user_model
+          .save()
+          .then((data) => {
+            const id = data._id;
+            const token = jwt.sign({ id: id }, pavKey);
             res
-              .status(422)
-              .send({ error_type: "nexmo", error: data.status_message });
-          }
-        })
-        .catch((err) => {
-          res.status(422).send({ error_type: "nexmo", error: err.message });
-        });
+              .header("x-auth-token", token)
+              .status(200)
+              .send({ log_in: true });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(422).send({ error_type: "mongooes", error: err });
+          });
+      } else {
+        phone_number(body_toSave.phone)
+          .then((data) => {
+            // get all region data
+
+            if (data.status == 0) {
+              body_toSave.region = {
+                country_code: data.country_code,
+                country_code_iso3: data.country_code_iso3,
+                country_name: data.country_name,
+              };
+
+              // saveing to database
+              console.log(body_toSave);
+              const new_user_model = new user_model(body_toSave);
+              new_user_model
+                .save()
+                .then((data) => {
+                  const id = data._id;
+                  const token = jwt.sign({ id: id }, pavKey);
+                  res
+                    .header("x-auth-token", token)
+                    .status(200)
+                    .send({ log_in: true });
+                })
+                .catch((err) => {
+                  res.status(422).send({ error_type: "mongooes", error: err });
+                });
+            } else {
+              res
+                .status(422)
+                .send({ error_type: "nexmo", error: data.status_message });
+            }
+          })
+          .catch((err) => {
+            res.status(422).send({ error_type: "nexmo", error: err.message });
+          });
+      }
     });
   });
 });
-Router.post("/me/signin/google", (req, res) => {
+Router.post("/me/signin/other", (req, res) => {
   const body = req.body;
 
   let body_toSave = body;
   body_toSave.user_name = rug.generate();
-  body_toSave.pass = " ";
   body_toSave.phone = " ";
 
   const pavKey = config.get("jwt");
 
-  // saveing to database
-  const new_user_model = new user_model(body_toSave);
-  new_user_model
-    .save()
-    .then((data) => {
-      const id = data._id;
-      const token = jwt.sign({ id: id }, pavKey);
-      res.header("x-auth-token", token).status(200).send({ log_in: true });
-    })
-    .catch((err) => {
-      if (err.keyPattern.email == 1) {
-        // need log
-        user_model
-          .find({ email: body_toSave.email })
+  // cheak call is a cheak or signin
+  if (body_toSave.check == "true") {
+    // cheak if accout  exist
+    user_model
+      .find({ email: body_toSave.email })
+      .then((data) => {
+        if (data.length != 0) {
+          res.status(200).send({ log_in: true });
+        } else {
+          res.status(400).send({ log_in: false });
+        }
+      })
+      .catch((err) => {
+        res.status(422).send({ error_type: "mongooes", error: err });
+      });
+  }
+  if (body_toSave.check == "false") {
+    // check if user_name exist
+
+    if ((body_toSave.user_name = "null")) {
+      body_toSave.user_name = rug.generate();
+    }
+
+    // pass bcrypt
+    bcrypt.genSalt(10).then((salt) => {
+      bcrypt.hash(body.pass, salt).then((newPass) => {
+        body_toSave.pass = newPass;
+
+        const new_user_model = new user_model(body_toSave);
+        new_user_model
+          // cract a new accout
+          .save()
           .then((data) => {
             const id = data._id;
             const token = jwt.sign({ id: id }, pavKey);
@@ -125,48 +172,26 @@ Router.post("/me/signin/google", (req, res) => {
               .send({ log_in: true });
           })
           .catch((err) => {
-            res.status(422).send({ error_type: "mongooes", error: err });
+            if (err.keyPattern.email == 1) {
+              // accout  exist
+              user_model
+                .find({ email: body_toSave.email })
+                .then((data) => {
+                  const id = data._id;
+                  const token = jwt.sign({ id: id }, pavKey);
+                  res
+                    .header("x-auth-token", token)
+                    .status(200)
+                    .send({ log_in: true });
+                })
+                .catch((err) => {
+                  res.status(422).send({ error_type: "mongooes", error: err });
+                });
+            }
           });
-      }
+      });
     });
-});
-Router.post("/me/signin/facebook", (req, res) => {
-  const body = req.body;
-
-  let body_toSave = body;
-  body_toSave.user_name = rug.generate();
-  body_toSave.pass = " ";
-  body_toSave.phone = " ";
-
-  const pavKey = config.get("jwt");
-
-  // saveing to database
-  const new_user_model = new user_model(body_toSave);
-  new_user_model
-    .save()
-    .then((data) => {
-      const id = data._id;
-      const token = jwt.sign({ id: id }, pavKey);
-      res.header("x-auth-token", token).status(200).send({ log_in: true });
-    })
-    .catch((err) => {
-      if (err.keyPattern.email == 1) {
-        // need log
-        user_model
-          .find({ email: body_toSave.email })
-          .then((data) => {
-            const id = data._id;
-            const token = jwt.sign({ id: id }, pavKey);
-            res
-              .header("x-auth-token", token)
-              .status(200)
-              .send({ log_in: true });
-          })
-          .catch((err) => {
-            res.status(422).send({ error_type: "mongooes", error: err });
-          });
-      }
-    });
+  }
 });
 
 // login

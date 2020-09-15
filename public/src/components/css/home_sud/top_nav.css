@@ -1,0 +1,59 @@
+#nav {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 10px;
+}
+#nav #find {
+  flex: 1;
+  margin-right: 10px;
+
+  border: 1px solid saddlebrown;
+  border-radius: 11rem;
+  padding: 5px;
+
+  display: flex;
+
+  text-decoration: none !important;
+}
+#nav #find p {
+  width: auto;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+
+  text-align: center;
+
+  color: ghostwhite;
+}
+
+#nav_bottom {
+  width: 100%;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  display: flex;
+  justify-content: unset;
+
+  /* border-radius: 11rem; */
+  /* border: 1px solid teal; */
+
+  background-color: rgb(69, 76, 83);
+}
+#nav_bottom > div {
+  margin-left: auto;
+  margin-right: auto;
+
+  height: 30px;
+  width: 30px;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+#nav_bottom > div > img {
+  height: 30px;
+  width: 30px;
+}
