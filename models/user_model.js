@@ -43,12 +43,11 @@ const user_Schema = mongoose.Schema({
   channel: {
     type: [mongoose.Types.ObjectId],
   },
+  time: {
+    type: Date,
+    default: Date.now(),
+  },
 });
-
-user_Schema.methods.addPhoneNull = function () {
-  this.phone.unique = false;
-  this.phone = " ";
-};
 
 const user_model = mongoose.model("user", user_Schema);
 

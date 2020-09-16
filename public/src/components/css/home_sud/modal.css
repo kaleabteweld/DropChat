@@ -1,0 +1,58 @@
+.modal-content {
+  background-color: #343a40;
+  border-radius: 15px;
+}
+.modal-content .modal-header .modal-title {
+  font-size: larger;
+  font-weight: bold;
+  color: crimson;
+}
+.modal-content .form {
+  display: flex;
+  flex-direction: column;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.modal-content .form .form-group {
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+}
+.modal-content .form .form-group label {
+  align-self: center;
+  font-weight: bolder;
+  color: black;
+}
+.modal-content .form .form-group input {
+  border-radius: 11rem;
+  background-color: #1e1e1e !important;
+  color: #2e8fa2 !important;
+}
+
+.modal-content .form .form-group .upload_but {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+
+  padding: 10px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  background-image: url("../../../img/icon//user-192.png");
+  background-size: 100% 100%;
+}
+
+.modal-content .form .form-group .upload_shit {
+  left: 43%;
+  opacity: 0;
+  position: absolute;
+  height: 70px;
+  width: 70px;
+  background: brown;
+  border-radius: 11rem;
+}

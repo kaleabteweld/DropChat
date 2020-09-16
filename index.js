@@ -7,6 +7,7 @@ var cors = require("cors");
 const bodyParser = require("body-parser");
 
 const user_router = require("./routers/users_router");
+const group_router = require("./routers/group_router");
 
 const app = express();
 
@@ -18,6 +19,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use("/api/users/", user_router);
+app.use("/api/group/", group_router);
 
 const mode = app.get("env");
 const port = config.get("port");

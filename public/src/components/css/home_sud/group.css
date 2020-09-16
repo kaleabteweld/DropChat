@@ -1,0 +1,175 @@
+@media all and (max-width: 500px) {
+  #root .Glist #data #text {
+    max-width: 80% !important;
+    max-height: 60px !important;
+    overflow: hidden !important;
+  }
+
+  #root .NewGroup {
+    height: 450px !important;
+    width: 100vw !important;
+
+    top: 10vh;
+    bottom: calc((100vh) - (500px));
+
+    left: calc((50vw) - (100vw) / 2) !important;
+    right: calc((50vw) + (100vw) / 2) !important;
+  }
+}
+
+* {
+  outline: none !important;
+}
+#root {
+  width: 100% !important;
+}
+#root #Group {
+  height: auto;
+  /* overflow-y: scroll; */
+
+  display: flex;
+  flex-direction: column;
+
+  position: relative;
+}
+#root .con {
+  display: flex;
+}
+#root .con .remove {
+  margin: auto;
+  margin-right: 10px;
+  cursor: pointer;
+}
+#root .con #more {
+  margin-left: auto;
+  margin-right: 4%;
+
+  width: 30px;
+  height: 30px;
+
+  cursor: pointer;
+}
+
+#root .newOradd {
+  height: 50px;
+  width: 50px;
+
+  /* background-color: skyblue; */
+
+  border-radius: 50%;
+
+  position: fixed;
+  top: calc((80vh) - (6px));
+  left: calc((99%) - (70px));
+
+  cursor: pointer;
+}
+#root .newOradd > img {
+  height: 50px;
+  width: 50px;
+
+  border-radius: 50%;
+}
+
+#root .none {
+  margin: auto;
+  margin-top: 110px;
+}
+#root .none p {
+  font-size: larger;
+  font-weight: bold;
+  color: crimson;
+}
+
+#root .NewGroup {
+  height: 500px;
+  width: 500px;
+
+  border-radius: 20px;
+
+  background-color: skyblue;
+
+  position: absolute;
+  /* top: calc( (0vh) + (500px)); */
+  top: 0%;
+  bottom: calc((100vh) - (500px));
+
+  left: calc((50vw) - (500px) / 2);
+  right: calc((50vw) + (500px) / 2);
+
+  background-color: rgb(61, 68, 74);
+
+  /* background-image: url('/DropTalk/img/main/woman-standing-near-group-of-people-1449791.jpg');
+    background-size: auto 100%; */
+
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+
+  /* justify-content: center; */
+}
+#root .NewGroup #nav {
+  width: 100%;
+  margin-top: 10px;
+}
+#root .NewGroup #nav > img {
+  height: 20px;
+  width: 20px;
+  margin-left: auto;
+  margin-right: 20px;
+
+  cursor: pointer;
+}
+
+/* form */
+#root .NewGroup .form {
+  display: flex;
+  flex-direction: column;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+#root .NewGroup .form .form-group {
+  display: flex;
+  flex-direction: column;
+}
+#root .NewGroup .form .form-group label {
+  align-self: center;
+  font-weight: bolder;
+  color: black;
+}
+#root .NewGroup .form .form-group input {
+  border-radius: 11rem;
+  background-color: #1e1e1e !important;
+  color: #2e8fa2 !important;
+}
+
+#root .NewGroup .form .form-group .img {
+  height: 70px;
+  width: 70px;
+  border-radius: 50%;
+
+  padding: 10px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  background-image: url("/DropTalk/img/main/user-192.png");
+  background-size: 100% 100%;
+}
+
+#root .NewGroup #other {
+  display: flex;
+  justify-content: space-evenly;
+}
+#root .NewGroup .form > .form-group .invalid-feedback > p {
+  margin: 0px;
+  font-weight: bolder;
+}
+#root .NewGroup .form .T > .form-group .invalid-feedback > p {
+  margin: 0px;
+  font-weight: bolder;
+}
