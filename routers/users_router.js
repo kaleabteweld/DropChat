@@ -11,6 +11,7 @@ const { OAuth2Client } = require("google-auth-library");
 var rug = require("random-username-generator");
 
 const user_model = require("../models/user_model");
+const group_model = require("../models/group_model");
 
 const user_Validation_new = require("../models/Validation/user_Validation_new");
 const user_Validation_login = require("../models/Validation/user_Validation_login");
@@ -375,6 +376,92 @@ Router.delete("/me", auth, (req, res) => {
     })
     .catch((err) => {
       res.status(422).send({ error_type: "mongoose", error: err });
+    });
+});
+
+// other user fechers
+
+// leave a group
+Router.delete("/group", auth, (req, res) => {
+  const user_id = req.user_id;
+  const group_id = Buffer.from(String(req.body.group), "base64").toString(
+    "ascii"
+  );
+
+  // cheak if group exist
+  group_model
+    .findById(group_id)
+    .then(() => {
+      // cheak if user exist
+      user_model
+        .findById(user_id)
+        .then(() => {
+          user_model
+            .findByIdAndUpdate(
+              { _id: user_id },
+              { $pull: { groups: group_id } }
+            )
+            .then(() => {
+              // check if user is last one
+              group_model
+                .findById(group_id)
+                .then((data) => {
+                  if (data != null) {
+                    if (data.members.length == 1 || data.admins.length == 1) {
+                      group_model
+                        .findByIdAndDelete(group_id)
+                        .then(() => {
+                          res.status(200).send({ done: true });
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                          res
+                            .status(422)
+                            .send({ error_type: "mongooes", error: err });
+                        });
+                    } else {
+                      group_model
+                        .findByIdAndUpdate(
+                          { _id: group_id },
+                          { $pull: { members: user_id, admins: user_id } }
+                        )
+                        .then(() => {
+                          res.status(200).send({ done: true });
+                        })
+                        .catch((err) => {
+                          console.log(err);
+                          res
+                            .status(422)
+                            .send({ error_type: "mongooes", error: err });
+                        });
+                    }
+                  } else {
+                    res.status(422).send({ error_type: "group not found" });
+                  }
+                })
+                .catch((err) => {
+                  console.log(err);
+                  res.status(422).send({ error_type: "mongooes", error: err });
+                });
+            })
+            .catch((err) => {
+              console.log(err);
+              res.status(422).send({ error_type: "mongooes", error: err });
+            });
+        })
+        .catch((err) => {
+          console.log(err);
+          res
+            .status(422)
+            .send({ error_type: "mongooes", error: "user not foued" });
+        });
+    })
+
+    .catch((err) => {
+      console.log(err);
+      res
+        .status(422)
+        .send({ error_type: "mongooes", error: "group  not foued" });
     });
 });
 

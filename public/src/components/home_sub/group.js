@@ -22,13 +22,7 @@ let Group = () => {
           <Group_sub />
         ))}
 
-        <div
-          class="newOradd"
-          type="button"
-          class="btn btn-primary"
-          data-toggle="modal"
-          data-target="#exampleModal"
-        >
+        <div class="newOradd" data-toggle="modal" data-target="#exampleModal">
           <img src="../DropTalk/img/main/addapk.png" data="Group"></img>
         </div>
         <Modal />

@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
+const { string } = require("joi");
 
 const group_Schema = mongoose.Schema({
   img: {
@@ -28,28 +29,33 @@ const group_Schema = mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  link: {
+    type: String,
+    default: " ",
+    required: false,
+  },
 });
 
 group_Schema.methods.getLink = async function () {
   const data = this._id;
 
   return new Promise(function (resolve, reject) {
-    bcrypt
-      .genSalt(10)
-      .then((salt) => {
-        bcrypt
-          .hash(String(data), salt)
-          .then((done) => {
-            done = Buffer.from(String(done)).toString("base64");
-            resolve(done);
-          })
-          .catch((err) => {
-            reject(err);
-          });
-      })
-      .catch((err) => {
-        reject(err);
-      });
+    // bcrypt
+    //   .genSalt(10)
+    //   .then((salt) => {
+    //     bcrypt
+    //       .hash(String(data), salt)
+    //       .then((done) => {
+    done = Buffer.from(String(data)).toString("base64");
+    resolve(done);
+    //   })
+    //     .catch((err) => {
+    //       reject(err);
+    //     });
+    // })
+    // .catch((err) => {
+    //   reject(err);
+    // });
   });
 };
 
